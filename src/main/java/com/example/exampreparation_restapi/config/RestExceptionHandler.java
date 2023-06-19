@@ -18,6 +18,12 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(401).body(e.getMessage());
     }
 
+//    @ExceptionHandler(value = {ExpiredJwtException.class})
+//    public ResponseEntity<String> expiredJwtExceptionHandler(
+//            ExpiredJwtException e
+//    ){
+//        return ResponseEntity.status(401).body("Your access expired");
+//    }
     @ExceptionHandler(value = {DataNotFoundException.class})
     public ResponseEntity<String> dataNotFoundExceptionHandler(
             DataNotFoundException e

@@ -8,10 +8,8 @@ import com.example.exampreparation_restapi.repository.QuestionRepository;
 import com.example.exampreparation_restapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,28 +25,28 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
 
-    @Override
-    public QuestionEntity update(QuestionRequestDto questionRequestDto, UUID id) {
-        QuestionEntity existingQuestion = questionRepository.findById(id)
-                .orElseThrow(() -> new DataNotFoundException("Question not found"));
-
-        ModelMapper modelMapper = new ModelMapper();
-
-        PropertyMap<QuestionRequestDto, QuestionEntity> questionMap = new PropertyMap<QuestionRequestDto, QuestionEntity>() {
-            @Override
-            protected void configure() {
-                skip().setId(null);
-                skip().setCreatedDate(null);
-                skip().setUpdatedDate(null);
-            }
-        };
-
-        modelMapper.addMappings(questionMap);
-        modelMapper.map(questionRequestDto, existingQuestion);
-
-        existingQuestion.setUpdatedDate(LocalDateTime.now());
-        return questionRepository.save(existingQuestion);
-    }
+//    @Override
+//    public QuestionEntity update(QuestionRequestDto questionRequestDto, UUID id) {
+//        QuestionEntity existingQuestion = questionRepository.findById(id)
+//                .orElseThrow(() -> new DataNotFoundException("Question not found"));
+//
+//        ModelMapper modelMapper = new ModelMapper();
+//
+//        PropertyMap<QuestionRequestDto, QuestionEntity> questionMap = new PropertyMap<QuestionRequestDto, QuestionEntity>() {
+//            @Override
+//            protected void configure() {
+//                skip().setId(null);
+//                skip().setCreatedDate(null);
+//                skip().setUpdatedDate(null);
+//            }
+//        };
+//
+//        modelMapper.addMappings(questionMap);
+//        modelMapper.map(questionRequestDto, existingQuestion);
+//
+//        existingQuestion.setUpdatedDate(LocalDateTime.now());
+//        return questionRepository.save(existingQuestion);
+//    }
 
     @Override
     public void deleteById(UUID id) {

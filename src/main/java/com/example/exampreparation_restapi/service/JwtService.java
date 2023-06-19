@@ -1,10 +1,7 @@
 package com.example.exampreparation_restapi.service;
 
 import com.example.exampreparation_restapi.entity.UserEntity;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
@@ -26,12 +23,12 @@ public class JwtService {
                 .signWith(SignatureAlgorithm.HS512, secretKey)
                 .setSubject(userEntity.getUsername())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(new Date().getTime()+accessTokenExpiry))
-                .setClaims(Map.of("role", getRoles(userEntity.getAuthorities())))
+                .setExpiration(new Date(new Date().getTime() + accessTokenExpiry))
+                .addClaims(Map.of("roles", getRoles(userEntity.getAuthorities())))
                 .compact();
     }
-    public Jws<Claims> extractToken(String token){
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+    public Jws<Claims> extractToken(String token) throws ExpiredJwtException{
+            return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
     }
     private List<String> getRoles(Collection<? extends GrantedAuthority> roles) {
         return roles.stream()
