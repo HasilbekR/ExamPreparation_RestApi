@@ -29,6 +29,7 @@ public class UserEntity extends BaseEntity implements UserDetails {
     private String phoneNumber;
     @Enumerated(EnumType.STRING)
     private UserRole role;
+    private boolean isArchived;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
