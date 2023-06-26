@@ -57,6 +57,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public JwtResponse getNewAccessToken(Principal principal) {
+        UserEntity userEntity = userRepository.findUserEntityByUsername(principal.getName()).orElseThrow(() -> new DataNotFoundException("user not found"));
+        String accessToken = jwtService.generateAccessToken(userEntity);
+        return JwtResponse.builder().accessToken(accessToken).build();
+
+    }
+
+    @Override
     public void delete(Principal principal) {
         UserEntity userEntity = userRepository.findUserEntityByUsername(principal.getName()).orElseThrow(
                 () -> new DataNotFoundException("User not found"));
@@ -66,20 +74,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserEntity getById(UUID id) {
-        return userRepository.findUserEntityById(id).orElseThrow(
-                () -> new DataNotFoundException("User not found")
-        );
-    }
-
-    @Override
     public JwtResponse signIn(LoginDto loginDto) {
         UserEntity userEntity = userRepository.findUserEntityByUsername(loginDto.getUsername())
                 .orElseThrow(() -> new AuthenticationFailedException("incorrect username or password"));
         if (!userEntity.isArchived()) {
             if (passwordEncoder.matches(loginDto.getPassword(), userEntity.getPassword())) {
                 String accessToken = jwtService.generateAccessToken(userEntity);
-                return JwtResponse.builder().accessToken(accessToken).build();
+                String refreshToken = jwtService.generateRefreshToken(userEntity);
+                return JwtResponse.builder()
+                        .accessToken(accessToken)
+                        .refreshToken(refreshToken).build();
             }
             throw new AuthenticationFailedException("incorrect username or password");
         }
