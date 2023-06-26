@@ -17,6 +17,8 @@ public class JwtService {
 
     @Value("${jwt.access.expiry}")
     private long accessTokenExpiry;
+    @Value("${jwt.refresh.expiry}")
+    private long refreshTokenExpiry;
 
     public String generateAccessToken(UserEntity userEntity) {
         return Jwts.builder()
@@ -27,7 +29,15 @@ public class JwtService {
                 .addClaims(Map.of("roles", getRoles(userEntity.getAuthorities())))
                 .compact();
     }
-    public Jws<Claims> extractToken(String token) throws ExpiredJwtException{
+    public String generateRefreshToken(UserEntity userEntity) {
+        return Jwts.builder()
+                .signWith(SignatureAlgorithm.HS512, secretKey)
+                .setSubject(userEntity.getUsername())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(new Date().getTime() + refreshTokenExpiry))
+                .compact();
+    }
+    public Jws<Claims> extractToken(String token){
             return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
     }
     private List<String> getRoles(Collection<? extends GrantedAuthority> roles) {

@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -42,5 +43,11 @@ public class AuthController {
             throw new RequestValidationException(allErrors);
         }
         return ResponseEntity.ok(userService.save(userRequestDto));
+    }
+    @GetMapping("/refresh-token")
+    public ResponseEntity<JwtResponse> refreshAccessToken(
+            Principal principal
+    ){
+        return ResponseEntity.ok(userService.getNewAccessToken(principal));
     }
 }

@@ -13,8 +13,9 @@ public interface UserService {
     JwtResponse signIn(LoginDto loginDto);
     UserEntity update(UserRequestDto userRequestDto, Principal principal);
     void delete(Principal principal);
-    UserEntity getById(UUID id);
     UserEntity save(UserRequestDto userRequestDto);
     List<UserEntity> getArchivedUsers(int page, int size);
     void retrieveUser(UUID userId);
+
+    JwtResponse getNewAccessToken(Principal principal);
 }

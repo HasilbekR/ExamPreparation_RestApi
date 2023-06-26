@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -22,5 +20,4 @@ public class QuestionRequestDto {
     private String question;
     private String textAnswer;
     private String voiceAnswer;
-    private UUID userId;
 }
